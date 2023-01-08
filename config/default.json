@@ -1,5 +1,4 @@
 {
-  // wallet module configs
   "wallet": {
     "privateKey": "PUT YOUR PRIVATE KEYS HERE"
   },
