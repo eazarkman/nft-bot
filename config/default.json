@@ -1,6 +1,6 @@
 {
   "wallet": {
-    "privateKey": "PUT YOUR PRIVATE KEYS HERE"
+    "privateKey": "PUT YOUR PRIVATE KEY HERE"
   },
   "nft1": {
     "template_ids":["260676"],
