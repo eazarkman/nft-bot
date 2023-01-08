@@ -1,7 +1,9 @@
 /*
  * This code scans the WAX blockchain for NFT assets 
  * listed on AtomicHub.io for purchase given target
- * parameters coded below.
+ * parameters coded below. Once a target is found, 
+ * program will call up 'purchase_asset.js' to 
+ * perform asset purchase.
  *
  * Author: Erick Azarkman (erick@azarkman.com)
  *
