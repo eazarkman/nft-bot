@@ -40,17 +40,19 @@ int main(int argc, char *argv[])
 	double 	a = 0;
 	int 	i = 0;
 	double 	maxPrice = 16.00;
-	 
+	int 	template_id;
+	bool    first_time = true;
 	json 	data;
 	json	asset_data;
 	string	command;
 	string  dprice;
-	int 	template_id;
+	string  body;
+
 	string 	url;
 	string  sale_id;
 	string 	asset_id;
 	string 	price;
-	string seller;
+	string  seller;
 	string  last_offering;
 	ofstream myfile;
 	string endpoint = "http://wax.eosusa.io/v1/chain/"; //bot runs much faster running locally on a WAX node.
@@ -61,7 +63,12 @@ int main(int argc, char *argv[])
 			
 			http::Request request{endpoint + "get_table_rows"};
 			
-			string body = "{\"scope\":\"atomicmarket\",\"code\":\"atomicmarket\",\"table\":\"sales\",\"json\":true,\"limit\":1,\"reverse\":true}";
+			if(first_time) {
+				first_time = false;
+				body = "{\"scope\":\"atomicmarket\",\"code\":\"atomicmarket\",\"table\":\"sales\",\"json\":true,\"limit\":1000,\"reverse\":true}";
+			}else{
+				body = "{\"scope\":\"atomicmarket\",\"code\":\"atomicmarket\",\"table\":\"sales\",\"json\":true,\"limit\":1,\"reverse\":true}";
+			}
 			const auto response = request.send("POST", body, {
 				"Content-Type: application/json"		
 			});
