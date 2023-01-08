@@ -3,7 +3,7 @@ nft-bot is deisgned to run on a local WAX blockchain node server. It would be mo
 **Instructions**<br>
 
   1) Unpackage. <br>
-  2) Configure bot.cc with target parameters.<br>
+  2) Configure bot.cc with target parameters and config/default.json with your WAX wallet private keys.<br>
   3) Run in command line (bash):<br>
 ```      
   npm install
