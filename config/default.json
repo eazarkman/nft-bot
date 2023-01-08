@@ -1,7 +1,7 @@
 {
   // wallet module configs
   "wallet": {
-    "privateKey": "5KEc7KFPr49XtZ3sat6KcmGScxqBgDfPazC5VHiRVoYGfgDrxBL"
+    "privateKey": "PUT YOUR PRIVATE KEYS HERE"
   },
   "nft1": {
     "template_ids":["260676"],
