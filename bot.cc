@@ -1,3 +1,12 @@
+/*
+ * This code scans the WAX blockchain for NFT assets 
+ * listed on AtomicHub.io for purchase given target
+ * parameters coded below.
+ *
+ * Author: Erick Azarkman (erick@azarkman.com)
+ *
+ */
+
 #include <iostream>
 #include <string>
 #include <cstring>
