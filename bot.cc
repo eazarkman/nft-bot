@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 						template_id = data["rows"][0]["template_id"];
 						if(template_id == 260676) {
 							//execute purchase js script 
-							command = "node argv.js "+sale_id+" "+asset_id+" "+dprice+"WAX";
+							command = "node purchase_assets.js "+sale_id+" "+asset_id+" "+dprice+"WAX";
 							system(command.c_str());
 						}
 					}
