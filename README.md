@@ -1,5 +1,6 @@
 nft-bot is deisgned to run on a local WAX blockchain node server. It would be most ideal to have this WAX node nearest to the blockproducers and AtomicAssets endpoints were sale transactions are mostly announed. 
 
+**Instructions**
   Unpackage. <br>
   Configure bot.cc with target parameters.<br>
   
