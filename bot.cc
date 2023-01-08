@@ -39,68 +39,72 @@ int main(int argc, char *argv[])
 {
 	double 	a = 0;
 	int 	i = 0;
-	double 	maxPrice = 2.02;
+	double 	maxPrice = 16.00;
 	 
 	json 	data;
 	json	asset_data;
-	
 	string	command;
 	string  dprice;
-	string 	template_id;
+	int 	template_id;
 	string 	url;
 	string  sale_id;
 	string 	asset_id;
 	string 	price;
-	string  last_asset;
+	string seller;
+	string  last_offering;
 	ofstream myfile;
-	
+	string endpoint = "http://wax.eosusa.io/v1/chain/"; //bot runs much faster running locally on a WAX node.
 	
 	
 	try{
 		while(true){
 			
-			http::Request request{"http://127.0.0.1/v1/chain/get_table_rows"};
-			//http::Request request{"http://213.239.195.229/v1/chain/get_table_rows"};
+			http::Request request{endpoint + "get_table_rows"};
 			
-			const string body = "{\"scope\":\"atomicmarket\",\"code\":\"atomicmarket\",\"table\":\"sales\",\"json\":true,\"limit\":1,\"reverse\":true}";
+			string body = "{\"scope\":\"atomicmarket\",\"code\":\"atomicmarket\",\"table\":\"sales\",\"json\":true,\"limit\":1,\"reverse\":true}";
 			const auto response = request.send("POST", body, {
 				"Content-Type: application/json"		
 			});
 			
-			a+=0.001;
-			cout << a << '\n';
-			
 			data = json::parse(std::string{response.body.begin(), response.body.end()});
+			sale_id = to_string(data["rows"][0]["sale_id"]);
+			if(last_offering.compare(sale_id) == 0)
+				continue;
+			cout << "bot: scanning sale_id: "<< data["rows"][0]["sale_id"] << "... ";
+			
 			
 			for(i=0; i<data["rows"].size(); i++){
-				if (data["rows"][i]["asset_ids"].size() == 1 && std::string{data["rows"][i]["collection_name"]}.compare("farmersworld") == 0) {
-					
-					sale_id  = to_string(data["rows"][i]["sale_id"]);
-										
+				
+				//target parameters defined here
+				if (data["rows"][i]["asset_ids"].size() == 1){ //&& std::string{data["rows"][i]["collection_name"]}.compare("dinoworldwax") == 0) {
+									
+					sale_id  = to_string(data["rows"][i]["sale_id"]);				
 					asset_id = std::string{data["rows"][i]["asset_ids"][0]};
-					
-					if (asset_id.compare(last_asset) == 0) {
-						continue;
-					}
-					
+					seller   = to_string(data["rows"][i]["seller"]);
 					price	 = std::string{data["rows"][i]["listing_price"]};
 					dprice 	 = getPrice(price);
 					if (stod(dprice) > maxPrice){
+						cout << "pass\n";
 						continue;
 					}
-					
-					url 	 = "http://priv-wax-us-proxy01.binfra.one:9000/atomicassets/v1/assets/"+asset_id;
-					http::Request request{url};
-					const auto response = request.send("GET");
-					asset_data  = json::parse(std::string{response.body.begin(), response.body.end()});
+					cout << "within target parameters\n";
+					http::Request request{"http://wax.eosusa.io/v1/chain/get_table_rows"};
+					body = "{\"scope\":"+seller+",\"code\":\"atomicassets\",\"table\":\"assets\",\"json\":true,\"lower_bound\":\""+asset_id+"\",\"upper_bound\":\""+asset_id+"\"}";
+					const auto response = request.send("POST", body, {
+						"Content-Type: application/json"		
+					});
+					data  = json::parse(std::string{response.body.begin(), response.body.end()});
 					try{
-						template_id = std::string{asset_data["data"]["template"]["template_id"]};
-						if(template_id.compare("260676") == 0){
-							//cout << asset_id + " is below maxPrice!\n";
-							//cout   << dprice << endl;
+						cout << "seller: "+seller+"\ncollection name: " + std::string{data["rows"][0]["collection_name"]}+"\n";
+						cout << "template_id: " << data["rows"][0]["template_id"] << "\n";
+						cout << "asset id: " << data["rows"][0]["asset_id"] << "\n";
+						cout << "asset price: " + price + "\n\n";
+						
+						template_id = data["rows"][0]["template_id"];
+						if(template_id == 260676) {
+							//execute purchase js script 
 							command = "node argv.js "+sale_id+" "+asset_id+" "+dprice+"WAX";
 							system(command.c_str());
-							//return 0;
 						}
 					}
 					
@@ -108,10 +112,12 @@ int main(int argc, char *argv[])
 						cout << e.what() << '\n';
 						continue;
 					}
-					last_asset = asset_id;
+					
+				}else{
+					cout << "pass\n";
 				}
 			}
-			
+			last_offering = sale_id;
 		}
 	}
 	catch (const std::exception& e)
