@@ -1,0 +1,16 @@
+{
+  // wallet module configs
+  "wallet": {
+    "privateKey": "5KEc7KFPr49XtZ3sat6KcmGScxqBgDfPazC5VHiRVoYGfgDrxBL"
+  },
+  "nft1": {
+    "template_ids":["260676"],
+    "maxPrice": "128000000"
+  },
+  "nft2": {
+    "template_ids": ["318606"],
+    "maxPrice": "512000000"
+  }
+}
+
+
